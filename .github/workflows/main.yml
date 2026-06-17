@@ -1,0 +1,56 @@
+name: Deploy to HostGator via FTP
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar dependências
+        run: npm ci --legacy-peer-deps || npm install --legacy-peer-deps
+
+      - name: Instalar react-is
+        run: npm install react-is --legacy-peer-deps
+
+      - run: npm run build
+
+      - name: Detectar diretório de build
+        run: |
+          if [ -d "dist" ]; then echo "BUILD_DIR=dist" >> $GITHUB_ENV
+          elif [ -d "out" ]; then echo "BUILD_DIR=out" >> $GITHUB_ENV
+          else echo "ERRO: dist/ ou out/ não encontrado" && exit 1; fi
+
+      - name: Validar build
+        run: |
+          test -f "$BUILD_DIR/index.html" || (echo "ERRO: index.html não encontrado" && exit 1)
+          grep -qE 'src="/src/|src="\./src/|href="/src/' "$BUILD_DIR/index.html" && echo "ERRO: aponta para /src (source, não build)" && exit 1
+          if [ "$BUILD_DIR" = "dist" ]; then
+            test -d "$BUILD_DIR/assets" || (echo "ERRO: dist/assets não encontrado" && exit 1)
+            grep -q 'src="/assets/' "$BUILD_DIR/index.html" && echo "ERRO: assets absoluto, configure base: './'" && exit 1
+          fi
+          echo "Build válido: $BUILD_DIR"
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ${{ env.BUILD_DIR }}/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          dangerous-clean-slate: true
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/node_modules/**
+            **/*.map
