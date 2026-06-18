@@ -20,6 +20,7 @@ import {
   Send,
 } from "lucide-react";
 import teamImg from "@/assets/team.jpg";
+import projetoImg from "@/assets/projeto-interiores.png";
 
 const PHONE_DISPLAY = "(11) 91311-0483";
 const WA_BASE = "https://wa.me/5511913110483";
@@ -138,6 +139,7 @@ const services = [
   },
   {
     icon: Paintbrush,
+    image: projetoImg,
     title: "Projetos de Interiores",
     desc: "Desenvolvimento de projetos técnicos para reformas internas com foco em funcionalidade, segurança e valorização do imóvel.",
   },
@@ -180,7 +182,11 @@ export function Servicos() {
             return (
               <div key={s.title} className="card-elevated flex flex-col">
                 <div className="mb-5 grid h-12 w-12 place-items-center rounded-xl bg-primary-soft text-primary">
-                  <Icon className="h-6 w-6" />
+                  {(s as any).image ? (
+                    <img src={(s as any).image} alt={s.title} className="h-6 w-6 object-contain" loading="lazy" width={24} height={24} />
+                  ) : (
+                    <Icon className="h-6 w-6" />
+                  )}
                 </div>
                 <h3 className="text-lg font-bold text-foreground">{s.title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
