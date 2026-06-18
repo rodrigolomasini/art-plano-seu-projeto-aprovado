@@ -98,7 +98,7 @@ export function Sobre() {
           </div>
 
           <div ref={ref} className="mt-10 grid grid-cols-3 gap-6 border-t border-border pt-8">
-            <StatItem value={10} suffix="+" label="Anos de experiência" on={seen} />
+            <StatItem value={4} suffix="+" label="Anos de experiência" on={seen} />
             <StatItem value={100} suffix="k m²" label="Reformas aprovadas" on={seen} />
             <StatItem value={1} suffix=" dia útil" label="Prazo de entrega" on={seen} />
           </div>
