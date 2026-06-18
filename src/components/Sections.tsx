@@ -190,7 +190,7 @@ export function Servicos() {
                   rel="noopener noreferrer"
                   className="btn-secondary mt-6 text-sm"
                 >
-                  Solicite sua ART Agora!
+                  {s.title === "Emissão de ART para Reformas" ? "Solicite sua ART Agora!" : "Saiba Mais"}
                 </a>
               </div>
             );
