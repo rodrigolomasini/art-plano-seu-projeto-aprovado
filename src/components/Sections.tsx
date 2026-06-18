@@ -190,7 +190,7 @@ export function Servicos() {
                   rel="noopener noreferrer"
                   className="btn-secondary mt-6 text-sm"
                 >
-                  Saiba Mais
+                  Solicite sua ART Agora!
                 </a>
               </div>
             );
